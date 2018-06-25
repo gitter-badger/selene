@@ -1,0 +1,14 @@
+name: selene
+description: Predictable Dart bindings for the Discord API.
+version: 0.1.0
+homepage: https://github.com/sarcasmloading/selene
+author: sarcasmloading
+
+environment:
+  sdk: '>=2.0.0-dev.55.0 <2.0.0'
+
+dependencies:
+  w_transport: ^3.0.0
+
+dev_dependencies:
+  test: ^0.12.30
