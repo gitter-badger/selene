@@ -3,6 +3,8 @@ part of selene;
 /// A message received or being sent to the WebSocket.
 class WSFrame {
   /// The data of this frame (the `d` property)
+  ///
+  /// This can either be a number, a string or a [Map<String, dynamic>] JSON map.
   dynamic data;
 
   /// The sequence number of this frame (the `s` property)
