@@ -120,52 +120,47 @@ class RestApi implements RestApiBase {
       makeNewRequest('/channels/$channelId/messages/$messageId', 'PATCH');
 
   @override
-  Future<transport.Response> getChannel(String id,
-      [Map<String, dynamic> params])
+  Future<transport.Response> getChannel(String id) => makeNewRequest(
+        '/channels/$id',
+        'GET',
+      );
 
   @override
-  Future<transport.Response> getChannelInvites(String channelId) {
-    // TODO: implement getChannelInvites
-  }
+  Future<transport.Response> getChannelInvites(String channelId) =>
+      makeNewRequest('/channels/$channelId/invites', 'GET');
 
   @override
   Future<transport.Response> getChannelMessage(
-      String channelId, String messageId) {
-    // TODO: implement getChannelMessage
-  }
+          String channelId, String messageId) =>
+      makeNewRequest('/channels/$channelId/messages/$messageId', 'GET');
 
   @override
   Future<transport.Response> getChannelMessages(String channelId,
-      [Map<String, dynamic> params]) {
-    // TODO: implement getChannelMessages
-  }
+          [Map<String, dynamic> params]) =>
+      makeNewRequest('/channels/$channelId/messages', 'GET');
 
   @override
-  Future<transport.Response> getPinnedMessages(String channelId) {
-    // TODO: implement getPinnedMessages
-  }
-
+  Future<transport.Response> getPinnedMessages(String channelId) =>
+      makeNewRequest('/channels/$channelId/pins', 'GET');
   @override
   Future<transport.Response> getReactions(
-      String channelId, String messageId, String emojiFormat,
-      [Map<String, dynamic> params]) {
-    // TODO: implement getReactions
-  }
+          String channelId, String messageId, String emojiFormat,
+          [Map<String, dynamic> params]) =>
+      makeNewRequest(
+          '/channels/$channelId/messages/$messageId/reactions/$emojiFormat',
+          'GET');
 
   @override
   Future<transport.Response> modifyChannel(String id, String method,
-      [Map<String, dynamic> params]) {
-    // TODO: implement modifyChannel
-  }
+          [Map<String, dynamic> params]) =>
+      makeNewRequest('/channels/$id', method);
 
   @override
   Future<transport.Response> removeRecipientFromGroupDm(
-      String channelId, String userId) {
-    // TODO: implement removeRecipientFromGroupDm
-  }
+          String channelId, String userId) =>
+      makeNewRequest('/channels/$channelId/recipients/$userId', 'DELETE');
 
   @override
-  Future<transport.Response> triggerTypingIndicator(String channelId) {
-    // TODO: implement triggerTypingIndicator
-  }
+  Future<transport.Response> triggerTypingIndicator(String channelId) =>
+      makeNewRequest('/channels/$channelId/typing', 'POST');
 }

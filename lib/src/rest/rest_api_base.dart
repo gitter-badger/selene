@@ -13,8 +13,7 @@ abstract class RestApiBase {
   /// Gets a channel by ID. Returns a channel object.
   ///
   /// Route: `GET /channels/{id}`
-  Future<transport.Response> getChannel(String id,
-      [Map<String, dynamic> params]);
+  Future<transport.Response> getChannel(String id);
 
   /// Modifies a channel.
   ///
