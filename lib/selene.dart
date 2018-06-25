@@ -7,7 +7,7 @@ import 'dart:core';
 
 import 'dart:core';
 
-import 'package:w_transport/w_transport.dart';
+import 'package:w_transport/w_transport.dart' as transport;
 
 // Core
 part 'src/core/session.dart';

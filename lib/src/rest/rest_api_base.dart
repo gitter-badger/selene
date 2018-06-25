@@ -5,7 +5,8 @@ abstract class RestApiBase {
   /// Gets a channel by ID. Returns a channel object.
   ///
   /// Route: `GET /channels/{id}`
-  Future<Response> getChannel(String id, [Map<String, dynamic> params]);
+  Future<transport.Response> getChannel(String id,
+      [Map<String, dynamic> params]);
 
   /// Modifies a channel.
   ///
@@ -14,7 +15,7 @@ abstract class RestApiBase {
   /// For the PATCH method, all JSON params are optional.
   ///
   /// Routes: `PUT /channels/{id}` and `PATCH /channels/{id}`
-  Future<Response> modifyChannel(String id, String method,
+  Future<transport.Response> modifyChannel(String id, String method,
       [Map<String, dynamic> params]);
 
   /// Deletes a channel, or closes a private message.
@@ -23,7 +24,7 @@ abstract class RestApiBase {
   /// Returns a channel object on success.
   ///
   /// Route: `DELETE /channels/{id}`
-  Future<Response> deleteChannel(String id);
+  Future<transport.Response> deleteChannel(String id);
 
   /// Returns the messages for a channel.
   ///
@@ -32,7 +33,7 @@ abstract class RestApiBase {
   /// Returns an array of message objects on success.
   ///
   /// Route: `GET /channels/{channelId}/messages`
-  Future<Response> getChannelMessages(String channelId,
+  Future<transport.Response> getChannelMessages(String channelId,
       [Map<String, dynamic> params]);
 
   /// Returns a specific message in the channel.
@@ -41,7 +42,8 @@ abstract class RestApiBase {
   /// Returns a message object on success.
   ///
   /// Route: `GET /channels/{channelId}/messages/{messageId}`
-  Future<Response> getChannelMessage(String channelId, String messageId);
+  Future<transport.Response> getChannelMessage(
+      String channelId, String messageId);
 
   /// Posts a message to a guild text or DM channel.
   ///
@@ -50,7 +52,8 @@ abstract class RestApiBase {
   /// Returns a message object on success.
   ///
   /// Route: `POST /channels/{channelId}/messages`
-  Future<Response> createMessage(String channelId, Map<String, dynamic> params);
+  Future<transport.Response> createMessage(
+      String channelId, Map<String, dynamic> params);
 
   /// Creates a reaction for the message.
   ///
@@ -59,7 +62,7 @@ abstract class RestApiBase {
   /// Returns `204 Empty Response` on success.
   ///
   /// Route: `PUT /channels/{channelId}/messages/{messageId}/reactions/{emojiFormat}/@me`
-  Future<Response> createReaction(
+  Future<transport.Response> createReaction(
       String channelId, String messageId, String emojiFormat);
 
   /// Deletes a reaction the current user has made for the message.
@@ -67,7 +70,7 @@ abstract class RestApiBase {
   /// Returns `204 Empty Response` on success.
   ///
   /// Route: `DELETE /channels/{channelId}/messages/{messageId}/reactions/{emojiFormat}/@me`
-  Future<Response> deleteOwnReaction(
+  Future<transport.Response> deleteOwnReaction(
       String channelId, String messageId, String emojiFormat);
 
   /// Deletes another user's reaction.
@@ -76,7 +79,7 @@ abstract class RestApiBase {
   /// Returns `204 Empty Response` on success.
   ///
   /// Route: `DELETE /channels/{channelId}/messages/{messageId}/reactions/{emojiFormat}/{userId}`
-  Future<Response> deleteUserReaction(
+  Future<transport.Response> deleteUserReaction(
       String channelId, String messageId, String emojiFormat, String userId);
 
   /// Gets a list of users that have reacted with this emoji.
@@ -84,7 +87,7 @@ abstract class RestApiBase {
   /// Returns an array of user objects on success.
   ///
   /// Route: `GET /channels/{channelId}/messages/{messageId}/reactions/{emojiFormat}`
-  Future<Response> getReactions(
+  Future<transport.Response> getReactions(
       String channelId, String messageId, String emojiFormat,
       [Map<String, dynamic> params]);
 
@@ -94,7 +97,8 @@ abstract class RestApiBase {
   /// Returns(?) `204 No Response` on success.
   ///
   /// Route: `DELETE /channels/{channelId}/messages/{messageId}/reactions`
-  Future<Response> deleteAllReactions(String channelId, String messageId);
+  Future<transport.Response> deleteAllReactions(
+      String channelId, String messageId);
 
   /// Edits a previously sent messages.
   ///
@@ -102,7 +106,7 @@ abstract class RestApiBase {
   /// Returns a message object on success.
   ///
   /// Route: `PATCH /channels/{channelId}/messages/{messageId}`
-  Future<Response> editMessage(String channelId, String messageId,
+  Future<transport.Response> editMessage(String channelId, String messageId,
       [Map<String, dynamic> params]);
 
   /// Deletes a message.
@@ -111,7 +115,7 @@ abstract class RestApiBase {
   /// Returns `204 Empty Response` on success.
   ///
   /// Route: `DELETE /channels/{channelId}/messages/{messageId}`
-  Future<Response> deleteMessage(String channelId, String messageId);
+  Future<transport.Response> deleteMessage(String channelId, String messageId);
 
   /// Deletes multiple messages in a single request.
   ///
@@ -120,7 +124,7 @@ abstract class RestApiBase {
   /// Returns `204 Empty Response` on success.
   ///
   /// Route: `POST /channels/{channelId}/messages/bulk-delete`
-  Future<Response> deleteMessagesBulk(
+  Future<transport.Response> deleteMessagesBulk(
       String channelId, Map<String, dynamic> params);
 
   /// Edits the channel permission overwrites for a user.
@@ -130,7 +134,7 @@ abstract class RestApiBase {
   /// Returns `204 Empty Response` on success.
   ///
   /// Route: `PUT /channels/{channelId}/permissions/{overwriteId}`
-  Future<Response> editChannelPermissions(
+  Future<transport.Response> editChannelPermissions(
       String channelId, String overwriteId, Map<String, dynamic> params);
 
   /// Returns a list of invite objects (with metadata) for the channel.
@@ -139,7 +143,7 @@ abstract class RestApiBase {
   /// Requires the `MANAGE_CHANNELS` permission.
   ///
   /// Route: `GET /channels/{channelId}/invites`
-  Future<Response> getChannelInvites(String channelId);
+  Future<transport.Response> getChannelInvites(String channelId);
 
   /// Creates a new invite object for the channel.
   ///
@@ -149,7 +153,7 @@ abstract class RestApiBase {
   /// Returns an invite object.
   ///
   /// Route: `POST /channels/{channelId}/invites`
-  Future<Response> createChannelInvite(
+  Future<transport.Response> createChannelInvite(
       String channelId, Map<String, dynamic> params);
 
   /// Deletes a channel permission overwrite for a user or role in a channel.
@@ -159,7 +163,7 @@ abstract class RestApiBase {
   /// Returns a `204 Empty Response` on success.
   ///
   /// Route: `DELETE /channels/{channelId}/permissions/{overwriteId}`
-  Future<Response> deleteChannelPermission(
+  Future<transport.Response> deleteChannelPermission(
       String channelId, String overwriteId);
 
   /// Post a typing indicator for the specified indicator.
@@ -168,22 +172,23 @@ abstract class RestApiBase {
   /// Returns a `204 Empty Response` on success.
   ///
   /// Route: `POST /channels/{channelId}/typing`
-  Future<Response> triggerTypingIndicator(String channelId);
+  Future<transport.Response> triggerTypingIndicator(String channelId);
 
   /// Returns all pinned messages in the channel.
   ///
   /// Returns an array of message objects.
   ///
   /// Route: `GET /channels/{channelId}/pins`
-  Future<Response> getPinnedMessages(String channelId);
+  Future<transport.Response> getPinnedMessages(String channelId);
 
   /// Pins a message in a channel.
   ///
   /// Requires the `MANAGE_MESSAGES` permission.
   /// Returns a `204 Empty Response` on success.
   ///
-  /// Route: `PUT /channels/{channelId}/pins/{messageId}
-  Future<Response> addPinnedChannelMessage(String channelId, String messageId);
+  /// Route: `PUT /channels/{channelId}/pins/{messageId}`
+  Future<transport.Response> addPinnedChannelMessage(
+      String channelId, String messageId);
 
   /// Unpins a message in a channel.
   ///
@@ -191,7 +196,7 @@ abstract class RestApiBase {
   /// Returns a `204 Empty Response` on success.
   ///
   /// Route: `DELETE /channels/{channelId}/pins/{messageId}`
-  Future<Response> deletePinnedChannelMessage(
+  Future<transport.Response> deletePinnedChannelMessage(
       String channelId, String messageId);
 
   /// Adds a recipient to a Group DM using their access token.
@@ -199,7 +204,7 @@ abstract class RestApiBase {
   /// Returns(?) a `204 Empty Response` on success.
   ///
   /// Route: `PUT /channels/{channelId}/recipients/{userId}`
-  Future<Response> addRecipientToGroupDm(
+  Future<transport.Response> addRecipientToGroupDm(
       String channelId, String userId, Map<String, dynamic> params);
 
   /// Removes a recipient from a Group DM.
@@ -207,5 +212,6 @@ abstract class RestApiBase {
   /// Returns(?) a `204 Empty Response` on success.
   ///
   /// Route: `DELETE /channels/{channelId}/recipients/{userId}`
-  Future<Response> removeRecipientFromGroupDm(String channelId, String userId);
+  Future<transport.Response> removeRecipientFromGroupDm(
+      String channelId, String userId);
 }
