@@ -12,12 +12,18 @@ class DiscordSession {
   String tokenType = 'Bot';
 
   /// The REST API currently in use.
-  RestApiBase rest;
+  RestApiBase restClient;
 
   /// Creates a Discord session.
   DiscordSession(SessionOptions options) {
-    if (rest == null)
-      rest = new RestApi(
-          transportPlatform, options.tokenType + ' ' + options.token);
+    restClient = options.restClient;
+    transportPlatform = options.transportPlatform;
+
+    token = options.token;
+    tokenType = options.tokenType;
+
+    if (restClient == null)
+      restClient = new RestApi(transportPlatform,
+          options.tokenType + ' ' + options.token); // Default implementation
   }
 }
