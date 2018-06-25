@@ -2,6 +2,14 @@ part of selene;
 
 /// A base for the Discord REST API implementation.
 abstract class RestApiBase {
+  /// Executes a [transport.JsonRequest] using a bucket.
+  Future<transport.Response> makeRequest(
+      transport.JsonRequest request, String method);
+
+  /// Creates a new request using the paremeters, and executes it using a bucket.
+  Future<transport.Response> makeNewRequest(String uriReference, String method,
+      [Map<String, dynamic> params]);
+
   /// Gets a channel by ID. Returns a channel object.
   ///
   /// Route: `GET /channels/{id}`
