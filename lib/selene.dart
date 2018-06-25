@@ -11,6 +11,7 @@ import 'package:w_transport/w_transport.dart' as transport;
 
 // Core
 part 'src/core/session.dart';
+part 'src/core/session_options.dart';
 
 // REST
 part 'src/rest/rest_api_base.dart';

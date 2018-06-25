@@ -2,7 +2,7 @@ part of selene;
 
 /// The default implementation of the Discord REST API.
 class RestApi implements RestApiBase {
-  DiscordSession _session;
+  transport.TransportPlatform transportPlatform;
   transport.HttpClient client;
 
   String _token;
@@ -16,19 +16,10 @@ class RestApi implements RestApiBase {
 
   Uri baseUri = Uri.parse('https://discordapp.com/api/v6');
 
-  RestApi(this._session) {
-    client =
-        new transport.HttpClient(transportPlatform: _session.transportPlatform);
-    token = _session.token;
+  RestApi(this.transportPlatform, this._token) {
+    client = new transport.HttpClient(transportPlatform: transportPlatform);
   }
 
-  @override
-  Future<transport.Response> makeRequest(
-      transport.JsonRequest request, String method) {
-    return request.send(method);
-  }
-
-  @override
   Future<transport.Response> makeNewRequest(String uriReference, String method,
       [Map<String, dynamic> params]) async {
     var request = client.newJsonRequest();
