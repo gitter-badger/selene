@@ -14,8 +14,8 @@ class SessionOptions {
   /// The type of the token.
   String tokenType = 'Bot';
 
-  SessionOptions(this.transportPlatform, this.token,
-      {this.restClient, this.tokenType}) {
+  SessionOptions(this.transportPlatform, this.tokenType, this.token,
+      {this.restClient}) {
     if (restClient == null)
       restClient = new RestApi(transportPlatform, tokenType + ' ' + token);
   }

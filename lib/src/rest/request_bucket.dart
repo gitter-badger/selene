@@ -6,11 +6,11 @@ part of selene;
 ///
 /// and https://github.com/CharlotteDunois/Yasmin/blob/master/src/HTTP/RatelimitBucket.php
 class RequestBucket {
+  /// A store of all currently active [RequestBucket]s.
+  static List<RequestBucket> _buckets = [];
+
   /// The URI to access for this endpoint.
   Uri endpoint;
-
-  /// The internal queue.
-  List<transport.Request> _queue = null;
 
   /// The Epoch time (seconds since 00:00:00 UTC on January 1st, 1970) at which the ratelimit resets.
   DateTime resetTime = null;
@@ -28,76 +28,38 @@ class RequestBucket {
   RestApiBase restClient;
 
   /// Creates a new [RequestBucket].
-  RequestBucket(this.restClient) {
-    _queue = <transport.Request>[];
+  RequestBucket(
+    this.endpoint,
+    this.restClient,
+  ) {
+    _buckets.add(this);
   }
 
-  /// Queues a [Function] in this bucket.
-  Future queueRequest(transport.Request request) async {
-    _queue.add(request);
+  /// Gets, or creates a new [RequestBucket] for the specified endpoint.
+  factory RequestBucket.getOrCreate(Uri endpoint, RestApiBase restClient) {
+    return _buckets.firstWhere((bucket) => bucket.endpoint == endpoint,
+        orElse: () {
+      return new RequestBucket(endpoint, restClient);
+    });
   }
 
-  /// Attempts to run the first [Request] in the queue.
-  Future<transport.Response> executeQueue(String method) {
-    var request = getFirstRequest();
-    if (request == null) return null;
-
-    var completer = new Completer<transport.Response>();
+  /// Executes a JSON request using this bucket.
+  Future<transport.Response> executeRequest(
+      transport.JsonRequest request, String method) async {
+    transport.Response response;
 
     if (remaining == null) {
-      request.send(method).then((resp) {
-        parseRatelimitHeaders(resp);
-
-        completer.complete(resp);
-      });
-      return completer.future;
-    }
-
-    if (remaining > 0) {
-      request.send(method).then((resp) {
-        parseRatelimitHeaders(resp);
-
-        completer.complete(resp);
-      }).catchError((err) {
-        completer.completeError(err);
-      });
-      return completer.future;
-    }
-
-    var timeDifference = (new DateTime.now()).difference(resetTime);
-
-    if (timeDifference.inSeconds < 0) {
-      // Ratelimit would've reset by now, run request now
-      request.send(method).then((resp) {
-        parseRatelimitHeaders(resp);
-
-        completer.complete(resp);
-      }).catchError((err) {
-        completer.completeError(err);
-      });
+      response = await request.send(method);
     } else {
-      new Timer(timeDifference, () {
-        request.send(method).then((resp) {
-          parseRatelimitHeaders(resp);
-
-          completer.complete(resp);
-        }).catchError((err) {
-          completer.completeError(err);
-        });
-      });
+      if (remaining <= 0) {
+        // I don't know how remaining could somehow be lower, but I'm keeping it here for safety.
+        throw new RatelimitedException(request as transport.Request);
+      }
+      response = await request.send(method);
     }
 
-    return completer.future;
-  }
-
-  /// Returns a [Request] from the front of the queue, or null if there is none.
-  transport.Request getFirstRequest() {
-    try {
-      return _queue.first;
-    } on StateError {
-      // No element at first index.
-      return null;
-    }
+    parseRatelimitHeaders(response);
+    return response;
   }
 
   /// Parses the ratelimit headers from a response.

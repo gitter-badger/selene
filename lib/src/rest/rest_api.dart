@@ -5,27 +5,23 @@ class RestApi implements RestApiBase {
   transport.TransportPlatform transportPlatform;
   transport.HttpClient client;
 
-  String _token;
-
-  String get token => _token;
-
-  void set token(String newToken) {
-    _token = newToken;
-    client.headers['Authorization'] = newToken;
-  }
+  String token;
 
   Uri baseUri = Uri.parse('https://discordapp.com/api/v6');
 
-  RestApi(this.transportPlatform, this._token) {
+  RestApi(this.transportPlatform, this.token) {
     client = new transport.HttpClient(transportPlatform: transportPlatform);
   }
 
   Future<transport.Response> makeNewRequest(String uriReference, String method,
       [Map<String, dynamic> params]) async {
-    var request = client.newJsonRequest();
-    request.uri = baseUri.resolve(uriReference);
+    var request =
+        new transport.JsonRequest(transportPlatform: transportPlatform);
+    request.uri = Uri.parse(baseUri.toString() + uriReference);
+
     if (params != null) request.body = params;
-    return await request.send(method);
+    var bucket = new RequestBucket.getOrCreate(request.uri, this);
+    return await bucket.executeRequest(request, method);
   }
 
   @override
