@@ -152,7 +152,7 @@ class DiscordWebSocket extends WSBase {
     var handler = _payloadHandlers[frame.opCode];
     if (handler == null) {
       print(
-          '[Selene WebSocket] Warning: Received an OP code that doesn\'t have a handler, library version may be out-of-date.');
+          '[Selene WebSocket] Warning: Received an OP code that doesn\'t have a handler, library version (Selene v${versionNumber}) be out-of-date.');
       return;
     }
     await handler(frame);
