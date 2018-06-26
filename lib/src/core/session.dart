@@ -5,6 +5,9 @@ class DiscordSession {
   /// The transport platform to use for all requests from this session.
   transport.TransportPlatform transportPlatform;
 
+  /// The current dispatcher in use.
+  DiscordDispatcher dispatcher;
+
   /// The token to use for authorization.
   String token = '';
 
@@ -18,17 +21,19 @@ class DiscordSession {
   WSBase webSocket;
 
   /// Creates a Discord session.
-  DiscordSession(SessionOptions options) {
-    restClient = options.restClient;
-    webSocket = options.webSocket;
-    transportPlatform = options.transportPlatform;
-
-    token = options.token;
-    tokenType = options.tokenType;
-
-    if (restClient == null)
-      restClient = new RestApi(transportPlatform,
-          options.tokenType + ' ' + options.token); // Default implementation
+  DiscordSession(
+    String token,
+    transport.TransportPlatform transportPlatform, {
+    RestApiBase restClient,
+    WSBase webSocket,
+    String tokenType = 'Bot',
+  }) {
+    this.token = token;
+    this.tokenType = tokenType;
+    this.transportPlatform = transportPlatform;
+    this.restClient =
+        restClient ?? new RestApi(transportPlatform, tokenType + ' ' + token);
+    this.webSocket = webSocket ?? new DiscordWebSocket(token, restClient, this);
   }
 
   /// Starts the WebSocket.

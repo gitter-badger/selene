@@ -3,9 +3,16 @@ part of selene;
 /// The default implementation of [WSBase].
 class DiscordWebSocket extends WSBase {
   /// Creates a new [DiscordWebSocket].
-  DiscordWebSocket(this.token, this.restClient, this.transportPlatform) {
+  DiscordWebSocket(this.token, this.restClient, this.session) {
     _payloadHandlers = {
-      0: (WSFrame frame) async {},
+      0: (WSFrame frame) async {
+        // OP 0 Dispatch
+        _lastSequence = frame.sequenceNumber;
+        if (frame.eventName == 'READY') {
+          sessionId = frame.data['session_id'];
+        }
+        await session.dispatcher._handle(frame.eventName, frame.data);
+      },
       1: (WSFrame frame) async {},
       7: (WSFrame frame) async {},
       8: (WSFrame frame) async {},
@@ -39,8 +46,8 @@ class DiscordWebSocket extends WSBase {
   /// The current JSON decoder.
   JsonDecoder _decoder = new JsonDecoder();
 
-  /// The transport platform to use.
-  transport.TransportPlatform transportPlatform;
+  /// The current [DiscordSession].
+  DiscordSession session;
 
   /// The current WebSocket event subscription.
   StreamSubscription<dynamic> _wsSubscription;
@@ -64,6 +71,9 @@ class DiscordWebSocket extends WSBase {
   /// The last sequence number this client received.
   int _lastSequence;
 
+  /// (For resuming) The Session ID of this session.
+  String sessionId;
+
   /// The recommended shard count.
   ///
   /// Will be null unless [requestGatewayUri] with `shards = true` has been executed.
@@ -86,6 +96,12 @@ class DiscordWebSocket extends WSBase {
 
   /// The token to authenticate with.
   String token;
+
+  /// Whether this client is attempting to resume.
+  bool isResuming = false;
+
+  /// Whether this client is not attempting to resume.
+  bool get isNotResuming => !isResuming;
 
   /// Requests a new gateway URI (and sets [recommendedShardCount] if `shards = true`) from Discord.
   Future<Uri> requestGatewayUri(bool shards) async {
@@ -120,6 +136,18 @@ class DiscordWebSocket extends WSBase {
     sendFrame(frame);
   }
 
+  /// Sends a resume payload over the WebSocket.
+  void sendResume() {
+    var frame = new WSFrame();
+    frame.data = <String, dynamic>{
+      'token': token,
+      'session_id': sessionId,
+      'seq': _lastSequence
+    };
+    frame.opCode = 6; // OP 6 - Resume
+    sendFrame(frame);
+  }
+
   /// Sends a heartbeat payload over the WebSocket.
   Future heartbeat() async {
     var frame = new WSFrame();
@@ -139,8 +167,9 @@ class DiscordWebSocket extends WSBase {
       var reqUri = await requestGatewayUri(isSharding);
       gatewayUri = Uri.parse(reqUri.toString() + "?v=6&encoding=json");
     }
+    isResuming = reconnecting;
     _ws = await transport.WebSocket
-        .connect(gatewayUri, transportPlatform: transportPlatform);
+        .connect(gatewayUri, transportPlatform: session.transportPlatform);
 
     _wsSubscription = _ws.listen(handleWSMessage,
         onError: handleWSError, onDone: handleWSClose);
