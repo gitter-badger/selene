@@ -33,7 +33,7 @@ class WSFrame {
     var map = <String, dynamic>{};
     map['d'] = data;
     map['op'] = opCode;
-    // eventName and sequenceNumber can only by received
+    // eventName and sequenceNumber can only be received
     return map;
   }
 }
