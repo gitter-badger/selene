@@ -39,8 +39,15 @@ class RequestBucket {
   factory RequestBucket.getOrCreate(Uri endpoint, RestApiBase restClient) {
     return _buckets.firstWhere((bucket) => bucket.endpoint == endpoint,
         orElse: () {
-      return new RequestBucket(endpoint, restClient);
+      var bck = new RequestBucket(endpoint, restClient);
+      _buckets.add(bck);
+      return bck;
     });
+  }
+
+  /// Deletes this bucket and removes it from the store.
+  void dispose() {
+    _buckets.remove(this);
   }
 
   /// Executes a JSON request using this bucket.
@@ -64,22 +71,27 @@ class RequestBucket {
 
   /// Parses the ratelimit headers from a response.
   void parseRatelimitHeaders(transport.Response response) {
-    if (response.headers['X-RateLimit-Remaining'] != null) {
-      remaining = int.parse(response.headers['X-RateLimit-Remaining']);
+    print('Parsing ratelimit headers..');
+    print(response.headers);
+    if (response.headers['x-ratelimit-remaining'] != null) {
+      print('X-RateLimit-Remaining provided.');
+      remaining = int.parse(response.headers['x-ratelimit-remaining']);
     }
 
-    if (response.headers['X-RateLimit-Limit'] != null) {
-      limit = int.parse(response.headers['X-RateLimit-Limit']);
+    if (response.headers['x-ratelimit-limit'] != null) {
+      print('X-RateLimit-Limit provided.');
+      limit = int.parse(response.headers['x-ratelimit-limit']);
     }
 
-    if (response.headers['X-RateLimit-Reset'] != null) {
-      resetTime = DateTime.fromMillisecondsSinceEpoch(
-          int.parse(response.headers['X-RateLimit-Reset']) ~/
+    if (response.headers['x-ratelimit-reset'] != null) {
+      print('X-RateLimit-Reset provided.');
+      resetTime = new DateTime.fromMillisecondsSinceEpoch(
+          int.parse(response.headers['x-ratelimit-reset']) ~/
               60, // Convert seconds (from Discord) to milliseconds
           isUtc: true);
     }
 
-    if (response.headers['X-RateLimit-Global'] != null) {
+    if (response.headers['x-ratelimit-global'] != null) {
       isGlobalBucket = true;
     } else
       isGlobalBucket = false;

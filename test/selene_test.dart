@@ -16,13 +16,15 @@ Future devBot() async {
   var client = new DiscordSession(new SessionOptions(
       vmTransportPlatform, 'Bot', Platform.environment['SELENE_TOKEN']));
 
-  var msgid = '461063540418281473';
+  var msgid0 = '461064791809851392';
+  var msgid1 = '461064798923128833';
 
-  await client.restClient.deleteMessage('460274841715605516', msgid);
+  await client.restClient.deleteMessage('460274841715605516', msgid0);
+  await client.restClient.deleteMessage('460274841715605516', msgid1);
 
   var bucket = new RequestBucket.getOrCreate(
       Uri.parse(
-          'https://discordapp.com/api/v6/channels/460274841715605516/messages/$msgid'),
+          'https://discordapp.com/api/v6/channels/460274841715605516/messages/$msgid0'),
       client.restClient);
 
   printRatelimits(bucket);
