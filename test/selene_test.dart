@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:selene/selene.dart';
 import 'package:test/test.dart';
@@ -12,15 +13,17 @@ void main() {
 }
 
 Future devBot() async {
-  var client = new DiscordSession(new SessionOptions(vmTransportPlatform, 'Bot',
-      'NDU4NDgzMzY0NTU5NTg1Mjgw.DhNofA.grKVLX01XhHuAXXfNKARYnVhIiE'));
+  var client = new DiscordSession(new SessionOptions(
+      vmTransportPlatform, 'Bot', Platform.environment['SELENE_TOKEN']));
+
+  var msgid = '461063540418281473';
+
+  await client.restClient.deleteMessage('460274841715605516', msgid);
 
   var bucket = new RequestBucket.getOrCreate(
-      Uri.parse('https://discordapp.com/api/v6/channels/460274841715605516'),
+      Uri.parse(
+          'https://discordapp.com/api/v6/channels/460274841715605516/messages/$msgid'),
       client.restClient);
-
-  var channel = await client.restClient.getChannel('460274841715605516');
-  print(channel.body.asJson());
 
   printRatelimits(bucket);
 }
