@@ -19,6 +19,10 @@ class RestApi implements RestApiBase {
         new transport.JsonRequest(transportPlatform: transportPlatform);
     request.uri = Uri.parse(baseUri.toString() + uriReference);
 
+    request.headers['Authorization'] = token;
+    request.headers['User-Agent'] =
+        'DiscordBot (https://github.com/sarcasmloading/selene, $versionNumber)';
+
     if (params != null) request.body = params;
     var bucket = new RequestBucket.getOrCreate(request.uri, this);
     return await bucket.executeRequest(request, method);
