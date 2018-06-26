@@ -17,8 +17,11 @@ part 'src/core/session_options.dart';
 part 'src/rest/rest_api_base.dart';
 part 'src/rest/rest_api.dart';
 part 'src/rest/rest_response.dart';
+part 'src/rest/request_bucket.dart';
 
 // WebSocket
+part 'src/ws/ws_base.dart';
+part 'src/ws/ws_frame.dart';
 
 // Shared models
 part 'src/models/entity.dart';
