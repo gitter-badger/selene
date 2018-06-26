@@ -1,10 +1,6 @@
 part of selene;
 
 /// A bucketing utility to handle ratelimits.
-///
-/// Based off of https://github.com/abalabahaha/eris/blob/master/lib/util/SequentialBucket.js
-///
-/// and https://github.com/CharlotteDunois/Yasmin/blob/master/src/HTTP/RatelimitBucket.php
 class RequestBucket {
   /// A store of all currently active [RequestBucket]s.
   static List<RequestBucket> _buckets = [];
@@ -60,7 +56,7 @@ class RequestBucket {
     } else {
       if (remaining <= 0) {
         // I don't know how remaining could somehow be lower, but I'm keeping it here for safety.
-        throw new RatelimitedException(request as transport.Request);
+        throw new RatelimitedException(this, method);
       }
       response = await request.send(method);
     }
@@ -71,23 +67,18 @@ class RequestBucket {
 
   /// Parses the ratelimit headers from a response.
   void parseRatelimitHeaders(transport.Response response) {
-    print('Parsing ratelimit headers..');
-    print(response.headers);
     if (response.headers['x-ratelimit-remaining'] != null) {
-      print('X-RateLimit-Remaining provided.');
       remaining = int.parse(response.headers['x-ratelimit-remaining']);
     }
 
     if (response.headers['x-ratelimit-limit'] != null) {
-      print('X-RateLimit-Limit provided.');
       limit = int.parse(response.headers['x-ratelimit-limit']);
     }
 
     if (response.headers['x-ratelimit-reset'] != null) {
-      print('X-RateLimit-Reset provided.');
       resetTime = new DateTime.fromMillisecondsSinceEpoch(
-          int.parse(response.headers['x-ratelimit-reset']) ~/
-              60, // Convert seconds (from Discord) to milliseconds
+          int.parse(response.headers['x-ratelimit-reset']) *
+              1000, // Convert seconds (from Discord) to milliseconds
           isUtc: true);
     }
 

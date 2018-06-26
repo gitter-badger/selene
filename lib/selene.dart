@@ -5,7 +5,8 @@ import 'dart:async';
 
 import 'dart:core';
 
-import 'dart:core';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:w_transport/w_transport.dart' as transport;
 
@@ -22,9 +23,13 @@ part 'src/rest/ratelimited_exception.dart';
 // WebSocket
 part 'src/ws/ws_base.dart';
 part 'src/ws/ws_frame.dart';
+part 'src/ws/websocket.dart';
 
 // Shared models
 part 'src/models/entity.dart';
 
 /// The version number of this Selene version.
 String versionNumber = '0.1.0';
+
+/// Represents a WebSocket OP Code frame handler.
+typedef PayloadHandler = Future Function(WSFrame frame);

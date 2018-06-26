@@ -154,4 +154,11 @@ class RestApi implements RestApiBase {
   @override
   Future<transport.Response> triggerTypingIndicator(String channelId) =>
       makeNewRequest('/channels/$channelId/typing', 'POST');
+
+  @override
+  Future<transport.Response> getGateway() => makeNewRequest('/gateway', 'GET');
+
+  @override
+  Future<transport.Response> getGatewayWithShards() =>
+      makeNewRequest('/gateway/bot', 'GET');
 }

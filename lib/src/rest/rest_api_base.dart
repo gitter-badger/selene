@@ -213,4 +213,17 @@ abstract class RestApiBase {
   /// Route: `DELETE /channels/{channelId}/recipients/{userId}`
   Future<transport.Response> removeRecipientFromGroupDm(
       String channelId, String userId);
+
+  /// Returns an object with a single valid WSS URL.
+  ///
+  /// Route does not require authorization.
+  /// Clients should cache this value.
+  ///
+  /// Route: `GET /gateway`
+  Future<transport.Response> getGateway();
+
+  /// Returns an object with the same information as `getGateway`,
+  /// plus a `shards` key with the recommended number of shards
+  /// to connect with.
+  Future<transport.Response> getGatewayWithShards();
 }

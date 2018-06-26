@@ -28,6 +28,9 @@ class WSFrame {
     opCode = model['op'];
   }
 
+  /// Creates a blank [WSFrame].
+  WSFrame();
+
   /// Converts a [WSFrame] to a JSON map that can be sent.
   Map<String, dynamic> build() {
     var map = <String, dynamic>{};

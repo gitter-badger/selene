@@ -2,10 +2,11 @@ part of selene;
 
 /// An exception thrown when the user is being ratelimited.
 class RatelimitedException implements Exception {
-  final transport.Request request;
+  final RequestBucket requestBucket;
+  final String method;
 
-  const RatelimitedException(this.request);
+  const RatelimitedException(this.requestBucket, this.method);
 
   String toString() =>
-      'RatelimitedException: Ratelimited trying to access ${request.method} ${request.uri.toString()}';
+      'RatelimitedException: Ratelimited trying to access ${method} ${requestBucket.endpoint.toString()}';
 }
