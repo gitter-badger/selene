@@ -198,8 +198,10 @@ class DiscordGuild extends DiscordEntity {
 
     if (model['channels'] != null) {
       await Future.forEach(model['channels'], (jsonChannel) async {
-        var channel = DiscordChannel.fromJson(jsonChannel, session);
+        var channel = (DiscordChannel.fromJson(jsonChannel, session))
+            as DiscordGuildChannel;
         await channel._update(jsonChannel);
+        channel.guildId = id;
         channels[channel.id] = channel;
         session._channelGuildMap[channel.id] = id;
       });

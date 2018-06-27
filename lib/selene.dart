@@ -27,11 +27,14 @@ part 'src/ws/websocket.dart';
 
 // Models
 part 'src/models/entity.dart';
+part 'src/models/user.dart';
 part 'src/models/model_exception.dart';
 part 'src/models/guild.dart';
 part 'src/models/channel.dart';
+part 'src/models/dm_channel.dart';
 part 'src/models/guild_channel.dart';
 part 'src/models/guild_text_channel.dart';
+part 'src/models/text_channel.dart';
 part 'src/models/guild_category_channel.dart';
 part 'src/models/guild_voice_channel.dart';
 part 'src/models/message.dart';

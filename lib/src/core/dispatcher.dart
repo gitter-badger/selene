@@ -29,6 +29,11 @@ class DiscordDispatcher {
   StreamController<DiscordGuild> _onGuildLeaveController =
       new StreamController.broadcast();
 
+  /// Emitted when a message is updated.
+  Stream<DiscordMessage> onMessageCreate = null;
+  StreamController<DiscordMessage> _onMessageCreateController =
+      new StreamController.broadcast();
+
   /// Creates a new dispatcher, and attaches events.
   DiscordDispatcher(this.session) {
     onReady = _onReadyController.stream;
@@ -36,14 +41,24 @@ class DiscordDispatcher {
     onGuildUpdate = _onGuildUpdateController.stream;
     onGuildLeave = _onGuildLeaveController.stream;
 
+    onMessageCreate = _onMessageCreateController.stream;
+
     _eventHandlers = {
       'READY': (data) async {
         if (data['guilds'] != null) {
-          for (var lazyJsonGuild in data['guilds']) {
+          await Future.forEach(data['guilds'], (lazyJsonGuild) async {
             var lazyGuild = new DiscordGuild(session);
             await lazyGuild._update(lazyJsonGuild);
             session._guildCache[lazyGuild.id] = lazyGuild;
-          }
+          });
+        }
+        if (data['private_channels'] != null) {
+          await Future.forEach(data['private_channels'],
+              (privateChannelJson) async {
+            var privateChannel = new DiscordDMChannel(session);
+            await privateChannel._update(privateChannelJson);
+            session._privateChannelCache[privateChannel.id] = privateChannel;
+          });
         }
       },
       'GUILD_CREATE': (data) async {
@@ -85,10 +100,25 @@ class DiscordDispatcher {
             channel.type == ChannelType.GuildVoice) {
           var guildChannel = channel as DiscordGuildChannel;
           session._channelGuildMap[guildChannel.id] = guildChannel.guildId;
+        } else if (channel.type == ChannelType.DM) {
+          session._privateChannelCache[channel.id] = channel;
         }
       },
-      'CHANNEL_UPDATE': (data) async {},
-      'CHANNEL_DELETE': (data) async {},
+      'CHANNEL_UPDATE': (data) async {
+        var channel = session.getChannel(data['id']);
+        await channel._update(data);
+      },
+      'CHANNEL_DELETE': (data) async {
+        var guild = session.getGuild(session._channelGuildMap[data['id']]);
+        guild.channels.remove(data['id']);
+      },
+      'MESSAGE_CREATE': (data) async {
+        var message = new DiscordMessage(session);
+
+        await message._update(data);
+
+        _onMessageCreateController.add(message);
+      }
     };
   }
 

@@ -26,6 +26,9 @@ class DiscordSession {
   /// The entity cache for Discord guilds.
   Map<String, DiscordGuild> _guildCache = {};
 
+  /// The entity cache for private messages.
+  Map<String, DiscordDMChannel> _privateChannelCache = {};
+
   // TODO: User cache
 
   /// Creates a Discord session.
@@ -56,4 +59,21 @@ class DiscordSession {
   }
 
   // Utility functions
+
+  /// Retrieves a channel from the cache.
+  DiscordChannel getChannel(String id) {
+    if (_channelGuildMap.containsKey(id)) {
+      var guild = getGuild(_channelGuildMap[id]);
+      return guild.channels[id];
+    } else if (_privateChannelCache.containsKey(id)) {
+      return _privateChannelCache[id];
+    } else {
+      return null;
+    }
+  }
+
+  /// Retrieves a guild from the cache.
+  DiscordGuild getGuild(String id) {
+    return _guildCache[id];
+  }
 }

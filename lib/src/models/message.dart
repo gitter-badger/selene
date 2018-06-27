@@ -8,7 +8,15 @@ class DiscordMessage extends DiscordEntity {
   /// The ID of the channel this message belongs to.
   String channelId;
 
-  // TODO: Users
+  /// The author of this message.
+  ///
+  /// Will be null if it sent by a webhook. (Use `webhook` instead)
+  DiscordUser author;
+
+  // TODO: Webhooks
+
+  /// The [DiscordTextChannel] to which this message was sent.
+  DiscordTextChannel channel;
 
   /// The content of this message.
   String content;
@@ -69,12 +77,26 @@ class DiscordMessage extends DiscordEntity {
 
     channelId = model['channel_id'] ?? channelId;
     content = model['content'] ?? content;
+
+    if (model['author'] != null) {
+      if (model['webhook_id'] == null) {
+        // Not a webhook
+        author = new DiscordUser(session);
+        await author._update(model['author']);
+      }
+    }
+
     if (model['timestamp'] != null) {
       timestamp = DateTime.parse(model['timestamp']);
     }
     if (model['edited_timestamp'] != null) {
       editedTimestamp = DateTime.parse(model['edited_timestamp']);
     }
+
+    if (channel == null) {
+      channel = session.getChannel(channelId) as DiscordTextChannel;
+    }
+
     isTTS = model['tts'] ?? isTTS;
     mentionsEveryone = model['mention_everyone'] ?? mentionsEveryone;
     isPinned = model['pinned'] ?? isPinned;
