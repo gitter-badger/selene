@@ -129,9 +129,11 @@ class DiscordGuild extends DiscordEntity {
   /// The total count of members in this guild.
   int memberCount;
 
+  /// The channels in this guild.
+  Map<String, DiscordGuildChannel> channels = {};
+
   // TODO: Voice States
-  // TODO: Guild Member Array
-  // TODO: Guild Channel Array
+  // TODO: Guild Member Arra
   // TODO: Presences
 
   @override
@@ -157,6 +159,7 @@ class DiscordGuild extends DiscordEntity {
         defaultMessageNotificationsLevel = null;
         explicitContentFilterLevel = null;
         roles = [];
+        channels = {};
         featuresEnabled = [];
         mfaLevel = null;
         creatorApplicationId = null;
@@ -190,6 +193,15 @@ class DiscordGuild extends DiscordEntity {
         var role = new DiscordGuildRole(session);
         await role._update(jsonRole);
         roles.add(role);
+      }
+    }
+
+    if (model['channels'] != null) {
+      for (var jsonChannel in model['channels']) {
+        var channel = DiscordChannel.fromJson(jsonChannel, session);
+        await channel._update(jsonChannel);
+        channels[channel.id] = channel;
+        session.channelGuildMap[channel.id] = id;
       }
     }
 

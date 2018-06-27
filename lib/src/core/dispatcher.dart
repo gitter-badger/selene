@@ -77,7 +77,20 @@ class DiscordDispatcher {
           await guild._update(data);
           session.guildCache[guild.id] = guild;
         }
-      }
+      },
+      'CHANNEL_CREATE': (data) async {
+        var channel = DiscordChannel.fromJson(data, session);
+        await channel._update(data);
+
+        if (channel.type == ChannelType.GuildCategory ||
+            channel.type == ChannelType.GuildText ||
+            channel.type == ChannelType.GuildVoice) {
+          var guildChannel = channel as DiscordGuildChannel;
+          session.channelGuildMap[guildChannel.id] = guildChannel.guildId;
+        }
+      },
+      'CHANNEL_UPDATE': (data) async {},
+      'CHANNEL_DELETE': (data) async {},
     };
   }
 

@@ -33,6 +33,17 @@ abstract class DiscordChannel extends DiscordEntity {
             this, 'Received invalid channel type from Discord.');
     }
   }
+
+  /// Generates a [DiscordChannel] based off of the supplied data.
+  static DiscordChannel fromJson(
+      Map<String, dynamic> model, DiscordSession session) {
+    switch (model['type']) {
+      case 0:
+        return new DiscordGuildTextChannel(session);
+      default:
+        return null;
+    }
+  }
 }
 
 /// A type of channel.
