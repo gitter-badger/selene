@@ -45,4 +45,6 @@ class DiscordSession {
   Future stop() async {
     await webSocket.stop();
   }
+
+  // Utility functions
 }

@@ -30,6 +30,10 @@ part 'src/models/entity.dart';
 part 'src/models/model_exception.dart';
 part 'src/models/guild.dart';
 part 'src/models/channel.dart';
+part 'src/models/guild_channel.dart';
+part 'src/models/guild_text_channel.dart';
+part 'src/models/message.dart';
+part 'src/models/permission_overwrite.dart';
 part 'src/models/guild_role.dart';
 
 /// The version number of this Selene version.
