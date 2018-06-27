@@ -27,6 +27,7 @@ part 'src/ws/websocket.dart';
 
 // Models
 part 'src/models/entity.dart';
+part 'src/models/model_exception.dart';
 part 'src/models/guild.dart';
 part 'src/models/channel.dart';
 part 'src/models/guild_role.dart';
