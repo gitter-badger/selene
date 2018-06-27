@@ -21,10 +21,10 @@ class DiscordSession {
   WSBase webSocket;
 
   /// A map of channel IDs to their respective guilds.
-  Map<String, String> channelGuildMap = {};
+  Map<String, String> _channelGuildMap = {};
 
   /// The entity cache for Discord guilds.
-  Map<String, DiscordGuild> guildCache = {};
+  Map<String, DiscordGuild> _guildCache = {};
 
   // TODO: User cache
 
@@ -42,6 +42,7 @@ class DiscordSession {
     this.restClient =
         restClient ?? new RestApi(transportPlatform, tokenType + ' ' + token);
     this.webSocket = webSocket ?? new DiscordWebSocket(token, restClient, this);
+    dispatcher = new DiscordDispatcher(this);
   }
 
   /// Starts the WebSocket.

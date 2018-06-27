@@ -201,7 +201,7 @@ class DiscordGuild extends DiscordEntity {
         var channel = DiscordChannel.fromJson(jsonChannel, session);
         await channel._update(jsonChannel);
         channels[channel.id] = channel;
-        session.channelGuildMap[channel.id] = id;
+        session._channelGuildMap[channel.id] = id;
       }
     }
 

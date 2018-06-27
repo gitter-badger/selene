@@ -13,6 +13,5 @@ void main() {
 Future devBot() async {
   var client = new DiscordSession(
       Platform.environment['SELENE_TOKEN'], vmTransportPlatform);
-
   await client.start();
 }

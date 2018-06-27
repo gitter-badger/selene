@@ -12,29 +12,29 @@ class DiscordDispatcher {
 
   /// Emitted when the client is ready.
   Stream onReady = null;
-  StreamController onReadyController = new StreamController.broadcast();
+  StreamController _onReadyController = new StreamController.broadcast();
 
   /// Emitted when the client joins a guild.
   Stream<DiscordGuild> onGuildJoin = null;
-  StreamController<DiscordGuild> onGuildJoinController =
+  StreamController<DiscordGuild> _onGuildJoinController =
       new StreamController.broadcast();
 
   /// Emited when a guild is updated.
   Stream<DiscordGuild> onGuildUpdate = null;
-  StreamController<DiscordGuild> onGuildUpdateController =
+  StreamController<DiscordGuild> _onGuildUpdateController =
       new StreamController.broadcast();
 
   /// Emitted when the client leaves, or is removed from, a guild.
   Stream<DiscordGuild> onGuildLeave = null;
-  StreamController<DiscordGuild> onGuildLeaveController =
+  StreamController<DiscordGuild> _onGuildLeaveController =
       new StreamController.broadcast();
 
   /// Creates a new dispatcher, and attaches events.
   DiscordDispatcher(this.session) {
-    onReady = onReadyController.stream;
-    onGuildJoin = onGuildJoinController.stream;
-    onGuildUpdate = onGuildUpdateController.stream;
-    onGuildLeave = onGuildLeaveController.stream;
+    onReady = _onReadyController.stream;
+    onGuildJoin = _onGuildJoinController.stream;
+    onGuildUpdate = _onGuildUpdateController.stream;
+    onGuildLeave = _onGuildLeaveController.stream;
 
     _eventHandlers = {
       'READY': (data) async {
@@ -42,40 +42,40 @@ class DiscordDispatcher {
           for (var lazyJsonGuild in data['guilds']) {
             var lazyGuild = new DiscordGuild(session);
             await lazyGuild._update(lazyJsonGuild);
-            session.guildCache[lazyGuild.id] = lazyGuild;
+            session._guildCache[lazyGuild.id] = lazyGuild;
           }
         }
       },
       'GUILD_CREATE': (data) async {
         var guildId = data['id'];
-        if (session.guildCache.containsKey(guildId)) {
+        if (session._guildCache.containsKey(guildId)) {
           // Lazy loading guild from READY or a guild becomes available again to client
-          var guild = session.guildCache[guildId];
+          var guild = session._guildCache[guildId];
           await guild._update(data);
-          session.guildCache[guildId] = guild;
+          session._guildCache[guildId] = guild;
         } else {
           var guild = new DiscordGuild(session);
           await guild._update(data);
-          session.guildCache[guildId] = guild;
-          onGuildJoinController.add(guild);
+          session._guildCache[guildId] = guild;
+          _onGuildJoinController.add(guild);
         }
       },
       'GUILD_UPDATE': (data) async {
-        var guild = session.guildCache[data['id']];
+        var guild = session._guildCache[data['id']];
         await guild._update(data);
-        session.guildCache[guild.id] = guild;
-        onGuildUpdateController.add(guild);
+        session._guildCache[guild.id] = guild;
+        _onGuildUpdateController.add(guild);
       },
       'GUILD_DELETE': (data) async {
-        var guild = session.guildCache[data['id']];
+        var guild = session._guildCache[data['id']];
         if (data['unavailable'] == null) {
           // Removed or left guild
-          onGuildLeaveController.add(guild);
-          session.guildCache.remove(data['id']);
+          _onGuildLeaveController.add(guild);
+          session._guildCache.remove(data['id']);
         } else {
           // Guild has gone offline
           await guild._update(data);
-          session.guildCache[guild.id] = guild;
+          session._guildCache[guild.id] = guild;
         }
       },
       'CHANNEL_CREATE': (data) async {
@@ -86,7 +86,7 @@ class DiscordDispatcher {
             channel.type == ChannelType.GuildText ||
             channel.type == ChannelType.GuildVoice) {
           var guildChannel = channel as DiscordGuildChannel;
-          session.channelGuildMap[guildChannel.id] = guildChannel.guildId;
+          session._channelGuildMap[guildChannel.id] = guildChannel.guildId;
         }
       },
       'CHANNEL_UPDATE': (data) async {},
