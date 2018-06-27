@@ -2,11 +2,22 @@ part of selene;
 
 /// A channel belonging to a guild in Discord.
 abstract class DiscordGuildChannel extends DiscordChannel {
-  /// The ID of the guild this channel belongs to.
-  String guildId;
+  /// The [DiscordGuild] this channel belongs to.
+  DiscordGuild guild;
 
-  /// The ID of the parent category of this channel.
-  String parentCategoryId;
+  /// `Internal`: The guild_id parameter (for resolving Guild)
+  String _guildId;
+
+  /// `Internal`: The parent_id parameter (for resolving category)
+  String _parentId;
+
+  /// The parent category of this channel.
+  ///
+  /// Null if it does not have a parent.
+  DiscordGuildCategoryChannel get category {
+    if (_parentId == null) return null;
+    return session.getChannel(_parentId) as DiscordGuildCategoryChannel;
+  }
 
   /// The sorting position of this channel in the channel listing.
   int sortingPosition;
@@ -29,8 +40,15 @@ abstract class DiscordGuildChannel extends DiscordChannel {
   @override
   Future _update(Map<String, dynamic> model) async {
     await super._update(model);
-    guildId = model['guild_id'] ?? guildId;
-    parentCategoryId = model['parent_category_id'] ?? parentCategoryId;
+    if (model['guild_id'] != null) {
+      guild = session.getGuild(model['guild_id']);
+    }
+    _guildId = model['guild_id'] ?? _guildId;
+    if (model['parent_id'] != null) {
+      _parentId = model['parent_id'];
+    } else {
+      _parentId = null;
+    }
     sortingPosition = model['position'] ?? sortingPosition;
     name = model['name'] ?? name;
     isNsfw = model['nsfw'] ?? isNsfw;

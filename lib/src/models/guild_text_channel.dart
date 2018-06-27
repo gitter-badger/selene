@@ -16,7 +16,10 @@ class DiscordGuildTextChannel extends DiscordGuildChannel
   Future _update(Map<String, dynamic> model) async {
     await super._update(model);
 
-    topic = model['topic'] ?? null;
+    if (model['topic'] != null && model['topic'].isNotEmpty) {
+      topic = model['topic'];
+    }
+
     lastMessageId = model['last_message_id'] ?? lastMessageId;
     if (model['last_pin_timestamp'] != null) {
       lastPin = DateTime.parse(model['last_pin_timestamp']);

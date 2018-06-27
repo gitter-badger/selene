@@ -5,4 +5,7 @@ abstract class DiscordTextChannel {
 
   /// The ID of the last message sent to this channel.
   String lastMessageId;
+
+  /// The type of this channel.
+  ChannelType type;
 }

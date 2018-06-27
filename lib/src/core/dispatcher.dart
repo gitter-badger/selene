@@ -60,6 +60,7 @@ class DiscordDispatcher {
             session._privateChannelCache[privateChannel.id] = privateChannel;
           });
         }
+        _onReadyController.add(null);
       },
       'GUILD_CREATE': (data) async {
         var guildId = data['id'];
@@ -99,7 +100,10 @@ class DiscordDispatcher {
             channel.type == ChannelType.GuildText ||
             channel.type == ChannelType.GuildVoice) {
           var guildChannel = channel as DiscordGuildChannel;
-          session._channelGuildMap[guildChannel.id] = guildChannel.guildId;
+          var guild = session.getGuild(guildChannel._guildId);
+          guildChannel.guild = guild;
+          guild.channels[guildChannel.id] = guildChannel;
+          session._channelGuildMap[guildChannel.id] = guildChannel.guild.id;
         } else if (channel.type == ChannelType.DM) {
           session._privateChannelCache[channel.id] = channel;
         }

@@ -183,6 +183,7 @@ class DiscordGuild extends DiscordEntity {
     isEmbeddable = model['embed_enabled'] ?? isEmbeddable;
     embeddedChannelId = model['embed_channel_id'] ?? embeddedChannelId;
     verificationLevel = model['verification_level'] ?? verificationLevel;
+    memberCount = model['member_count'] ?? memberCount;
     defaultMessageNotificationsLevel = model['default_message_notifications'] ??
         defaultMessageNotificationsLevel;
     explicitContentFilterLevel =
@@ -201,7 +202,7 @@ class DiscordGuild extends DiscordEntity {
         var channel = (DiscordChannel.fromJson(jsonChannel, session))
             as DiscordGuildChannel;
         await channel._update(jsonChannel);
-        channel.guildId = id;
+        channel.guild = this;
         channels[channel.id] = channel;
         session._channelGuildMap[channel.id] = id;
       });
