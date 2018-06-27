@@ -25,8 +25,8 @@ class DiscordWebSocket extends WSBase {
         // OP 10 Hello
         heartbeatInterval = frame.data['heartbeat_interval'];
         heartbeater = new Timer.periodic(
-            new Duration(seconds: heartbeatInterval), (timer) async {
-          await heartbeat();
+            new Duration(milliseconds: heartbeatInterval), (timer) {
+          heartbeat();
         });
         // TODO: Resuming
         sendIdentify();
@@ -150,7 +150,7 @@ class DiscordWebSocket extends WSBase {
   }
 
   /// Sends a heartbeat payload over the WebSocket.
-  Future heartbeat() async {
+  void heartbeat() {
     var frame = new WSFrame();
     frame.data = _lastSequence;
     frame.opCode = 1; // OP 1 - Heartbeat
