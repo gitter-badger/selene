@@ -20,6 +20,14 @@ class DiscordSession {
   /// The WebSocket adapter currently in use.
   WSBase webSocket;
 
+  /// A map of channel IDs to their respective guilds.
+  Map<String, String> channelGuildMap = {};
+
+  /// The entity cache for Discord guilds.
+  Map<String, DiscordGuild> guildCache = {};
+
+  // TODO: User cache
+
   /// Creates a Discord session.
   DiscordSession(
     String token,

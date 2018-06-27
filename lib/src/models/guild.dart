@@ -141,7 +141,31 @@ class DiscordGuild extends DiscordEntity {
     // Unavailable (received during Ready, or guild goes offline)
     if (model['unavailable'] != null) {
       isAvailable = !(model['unavailable']);
-      if (isNotAvailable) return;
+      if (isNotAvailable) {
+        name = null;
+        iconHash = null;
+        splashHash = null;
+        isOwner = null;
+        ownerId = null;
+        permissionsNumber = null;
+        voiceRegion = null;
+        afkChannelId = null;
+        afkTimeout = null;
+        isEmbeddable = null;
+        embeddedChannelId = null;
+        verificationLevel = null;
+        defaultMessageNotificationsLevel = null;
+        explicitContentFilterLevel = null;
+        roles = [];
+        featuresEnabled = [];
+        mfaLevel = null;
+        creatorApplicationId = null;
+        isWidgetEnabled = null;
+        widgetChannelId = null;
+        systemMessageChannelId = null;
+        dateJoined = null;
+        isLarge = null;
+      }
     }
 
     name = model['name'] ?? name;
