@@ -29,8 +29,6 @@ class DiscordSession {
   /// The entity cache for private messages.
   Map<String, DiscordDMChannel> _privateChannelCache = {};
 
-  // TODO: User cache
-
   /// Creates a Discord session.
   DiscordSession(
     String token,
