@@ -189,24 +189,26 @@ class DiscordGuild extends DiscordEntity {
         model['explicit_content_filter'] ?? explicitContentFilterLevel;
 
     if (model['roles'] != null) {
-      for (var jsonRole in model['roles']) {
+      await Future.forEach(model['roles'], (jsonRole) async {
         var role = new DiscordGuildRole(session);
         await role._update(jsonRole);
         roles.add(role);
-      }
+      });
     }
 
     if (model['channels'] != null) {
-      for (var jsonChannel in model['channels']) {
+      await Future.forEach(model['channels'], (jsonChannel) async {
         var channel = DiscordChannel.fromJson(jsonChannel, session);
         await channel._update(jsonChannel);
         channels[channel.id] = channel;
         session._channelGuildMap[channel.id] = id;
-      }
+      });
     }
 
     if (model['features'] != null) {
-      featuresEnabled.addAll(model['features']);
+      await Future.forEach(model['features'], (feature) {
+        featuresEnabled.add(feature.toString());
+      });
     }
 
     mfaLevel = model['mfa_level'] ?? mfaLevel;

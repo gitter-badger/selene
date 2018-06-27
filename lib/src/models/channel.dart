@@ -37,9 +37,15 @@ abstract class DiscordChannel extends DiscordEntity {
   /// Generates a [DiscordChannel] based off of the supplied data.
   static DiscordChannel fromJson(
       Map<String, dynamic> model, DiscordSession session) {
+    print(
+        'Creating channel with props -> (ID ${model['id']}), type ${model['type']})');
     switch (model['type']) {
       case 0:
         return new DiscordGuildTextChannel(session);
+      case 2:
+        return new DiscordGuildVoiceChannel(session);
+      case 4:
+        return new DiscordGuildCategoryChannel(session);
       default:
         return null;
     }

@@ -32,16 +32,16 @@ class DiscordSession {
   DiscordSession(
     String token,
     transport.TransportPlatform transportPlatform, {
-    RestApiBase restClient,
-    WSBase webSocket,
+    RestApiBase rest,
+    WSBase socket,
     String tokenType = 'Bot',
   }) {
     this.token = token;
     this.tokenType = tokenType;
     this.transportPlatform = transportPlatform;
     this.restClient =
-        restClient ?? new RestApi(transportPlatform, tokenType + ' ' + token);
-    this.webSocket = webSocket ?? new DiscordWebSocket(token, restClient, this);
+        rest ?? new RestApi(transportPlatform, tokenType + ' ' + token);
+    this.webSocket = socket ?? new DiscordWebSocket(token, restClient, this);
     dispatcher = new DiscordDispatcher(this);
   }
 

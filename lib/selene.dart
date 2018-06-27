@@ -32,6 +32,8 @@ part 'src/models/guild.dart';
 part 'src/models/channel.dart';
 part 'src/models/guild_channel.dart';
 part 'src/models/guild_text_channel.dart';
+part 'src/models/guild_category_channel.dart';
+part 'src/models/guild_voice_channel.dart';
 part 'src/models/message.dart';
 part 'src/models/permission_overwrite.dart';
 part 'src/models/guild_role.dart';

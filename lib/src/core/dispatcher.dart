@@ -48,11 +48,9 @@ class DiscordDispatcher {
       },
       'GUILD_CREATE': (data) async {
         var guildId = data['id'];
-        if (session._guildCache.containsKey(guildId)) {
+        if (session._guildCache[guildId] != null) {
           // Lazy loading guild from READY or a guild becomes available again to client
-          var guild = session._guildCache[guildId];
-          await guild._update(data);
-          session._guildCache[guildId] = guild;
+          await (session._guildCache[guildId])._update(data);
         } else {
           var guild = new DiscordGuild(session);
           await guild._update(data);

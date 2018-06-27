@@ -3,7 +3,8 @@ part of selene;
 /// The default implementation of [WSBase].
 class DiscordWebSocket extends WSBase {
   /// Creates a new [DiscordWebSocket].
-  DiscordWebSocket(this.token, this.restClient, this.session) {
+  DiscordWebSocket(this.token, this.restClient, this.session,
+      {this.isSharding = false, this.shardId = 0, this.shardTotal = 0}) {
     _payloadHandlers = {
       0: (WSFrame frame) async {
         // OP 0 Dispatch
