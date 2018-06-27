@@ -29,17 +29,21 @@ part 'src/ws/websocket.dart';
 part 'src/models/entity.dart';
 part 'src/models/user.dart';
 part 'src/models/model_exception.dart';
-part 'src/models/guild.dart';
-part 'src/models/channel.dart';
-part 'src/models/dm_channel.dart';
-part 'src/models/guild_channel.dart';
-part 'src/models/guild_text_channel.dart';
-part 'src/models/text_channel.dart';
-part 'src/models/guild_category_channel.dart';
-part 'src/models/guild_voice_channel.dart';
 part 'src/models/message.dart';
 part 'src/models/permission_overwrite.dart';
 part 'src/models/guild_role.dart';
+
+// Models - Guilds
+part 'src/models/guilds/guild.dart';
+
+// Models - Channels
+part 'src/models/channels/channel.dart';
+part 'src/models/channels/dm_channel.dart';
+part 'src/models/channels/guild_channel.dart';
+part 'src/models/channels/guild_text_channel.dart';
+part 'src/models/channels/text_channel.dart';
+part 'src/models/channels/guild_category_channel.dart';
+part 'src/models/channels/guild_voice_channel.dart';
 
 /// The version number of this Selene version.
 String versionNumber = '0.1.0';
