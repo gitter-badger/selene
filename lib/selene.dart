@@ -25,8 +25,11 @@ part 'src/ws/ws_base.dart';
 part 'src/ws/ws_frame.dart';
 part 'src/ws/websocket.dart';
 
-// Shared models
+// Models
 part 'src/models/entity.dart';
+part 'src/models/guild.dart';
+part 'src/models/channel.dart';
+part 'src/models/guild_role.dart';
 
 /// The version number of this Selene version.
 String versionNumber = '0.1.0';
