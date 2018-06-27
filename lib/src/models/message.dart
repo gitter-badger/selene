@@ -18,6 +18,12 @@ class DiscordMessage extends DiscordEntity {
   /// The [DiscordTextChannel] to which this message was sent.
   DiscordTextChannel channel;
 
+  /// Whether this message was sent in a [DiscordGuildTextChannel].
+  bool get isInGuild => (channel is DiscordGuildTextChannel);
+
+  /// Whether this message was not sent in a [DiscordGuildTextChannel].
+  bool get isNotInGuild => !isInGuild;
+
   /// The content of this message.
   String content;
 
