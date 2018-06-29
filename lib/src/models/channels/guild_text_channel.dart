@@ -13,8 +13,8 @@ class DiscordGuildTextChannel extends DiscordGuildChannel
   DateTime lastPin;
 
   @override
-  Future _update(Map<String, dynamic> model) async {
-    await super._update(model);
+  _update(Map<String, dynamic> model) {
+    super._update(model);
 
     if (model['topic'] != null && model['topic'].isNotEmpty) {
       topic = model['topic'];

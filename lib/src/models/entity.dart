@@ -15,7 +15,7 @@ abstract class DiscordEntity {
   DiscordEntity(this.session);
 
   /// Updates this model, setting all properties to those available in [model].
-  Future _update(Map<String, dynamic> model) async {
+  _update(Map<String, dynamic> model) {
     id = model['id'];
   }
 }

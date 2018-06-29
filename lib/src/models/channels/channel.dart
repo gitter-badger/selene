@@ -9,8 +9,8 @@ abstract class DiscordChannel extends DiscordEntity {
   ChannelType type;
 
   @override
-  Future _update(Map<String, dynamic> model) async {
-    await super._update(model);
+  _update(Map<String, dynamic> model) {
+    super._update(model);
 
     switch (model['type']) {
       case 0:

@@ -24,16 +24,13 @@ class DiscordDMChannel extends DiscordChannel with DiscordTextChannel {
   }
 
   @override
-  Future _update(Map<String, dynamic> model) async {
-    await super._update(model);
+  _update(Map<String, dynamic> model) {
+    super._update(model);
 
-    if (model['recipients'] != null) {
-      recipients = [];
-      await Future.forEach(model['recipients'], (jsonRecipient) async {
-        var recipient = new DiscordUser(session);
-        await recipient._update(jsonRecipient);
-        recipients.add(recipient);
-      });
+    for (var jsonRecipient in model['recipients'] ?? []) {
+      var recipient = new DiscordUser(session);
+      recipient._update(jsonRecipient);
+      recipients.add(recipient);
     }
     lastMessageId = model['last_message_id'] ?? lastMessageId;
   }

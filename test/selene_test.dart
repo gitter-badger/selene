@@ -22,8 +22,18 @@ Future devBot() async {
         var sb = new StringBuffer();
         await Future.forEach(guild.channels.values,
             (DiscordGuildChannel guildChannel) async {
-          sb.writeln(
-              '`${guildChannel.name}` -> `${guildChannel.runtimeType.toString()}`');
+          await Future.forEach(
+              guild.channels.values
+                  .where((kv) => kv is DiscordGuildCategoryChannel),
+              (cat) async {
+            var dgc = cat as DiscordGuildCategoryChannel;
+            sb.writeln('Category {${dgc.name}}');
+            await Future.forEach(dgc.channels, (chan) {
+              var ch = chan as DiscordGuildChannel;
+              sb.writeln(
+                  '    Channel {${ch.name} -> ${ch.runtimeType.toString()}}');
+            });
+          });
         });
         await guildChannel.sendMessage(
             content: (sb.toString().isEmpty ? 'Nothing.' : sb.toString()));

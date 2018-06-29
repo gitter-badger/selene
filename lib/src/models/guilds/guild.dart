@@ -133,12 +133,12 @@ class DiscordGuild extends DiscordEntity {
   Map<String, DiscordGuildChannel> channels = {};
 
   // TODO: Voice States
-  // TODO: Guild Member Arra
+  // TODO: Guild Member Array
   // TODO: Presences
 
   @override
-  Future _update(Map<String, dynamic> model) async {
-    await super._update(model);
+  _update(Map<String, dynamic> model) {
+    super._update(model);
 
     // Unavailable (received during Ready, or guild goes offline)
     if (model['unavailable'] != null) {
@@ -189,29 +189,23 @@ class DiscordGuild extends DiscordEntity {
     explicitContentFilterLevel =
         model['explicit_content_filter'] ?? explicitContentFilterLevel;
 
-    if (model['roles'] != null) {
-      await Future.forEach(model['roles'], (jsonRole) async {
-        var role = new DiscordGuildRole(session);
-        await role._update(jsonRole);
-        roles.add(role);
-      });
+    for (var jsonRole in model['roles'] ?? []) {
+      var role = new DiscordGuildRole(session);
+      role._update(jsonRole);
+      roles.add(role);
     }
 
-    if (model['channels'] != null) {
-      await Future.forEach(model['channels'], (jsonChannel) async {
-        var channel = (DiscordChannel.fromJson(jsonChannel, session))
-            as DiscordGuildChannel;
-        await channel._update(jsonChannel);
-        channel.guild = this;
-        channels[channel.id] = channel;
-        session._channelGuildMap[channel.id] = id;
-      });
+    for (var jsonChannel in model['channels'] ?? []) {
+      var channel = (DiscordChannel.fromJson(jsonChannel, session))
+          as DiscordGuildChannel;
+      channel._update(jsonChannel);
+      channel.guild = this;
+      channels[channel.id] = channel;
+      session._channelGuildMap[channel.id] = id;
     }
 
-    if (model['features'] != null) {
-      await Future.forEach(model['features'], (feature) {
-        featuresEnabled.add(feature.toString());
-      });
+    for (var feature in model['features'] ?? []) {
+      featuresEnabled.add(feature.toString());
     }
 
     mfaLevel = model['mfa_level'] ?? mfaLevel;

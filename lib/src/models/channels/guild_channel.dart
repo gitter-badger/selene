@@ -38,8 +38,8 @@ abstract class DiscordGuildChannel extends DiscordChannel {
   DiscordGuildChannel(DiscordSession session) : super(session);
 
   @override
-  Future _update(Map<String, dynamic> model) async {
-    await super._update(model);
+  _update(Map<String, dynamic> model) {
+    super._update(model);
     if (model['guild_id'] != null) {
       guild = session.getGuild(model['guild_id']);
     }
@@ -56,7 +56,7 @@ abstract class DiscordGuildChannel extends DiscordChannel {
     if (model['permission_overwrites'] != null) {
       for (var jsonOverwrite in model['permission_overwrites']) {
         var overwrite = new PermissionOverwrite(session);
-        await overwrite._update(jsonOverwrite);
+        overwrite._update(jsonOverwrite);
         permissionOverwrites.add(overwrite);
       }
     }

@@ -48,7 +48,7 @@ class DiscordDispatcher {
         if (data['guilds'] != null) {
           await Future.forEach(data['guilds'], (lazyJsonGuild) async {
             var lazyGuild = new DiscordGuild(session);
-            await lazyGuild._update(lazyJsonGuild);
+            lazyGuild._update(lazyJsonGuild);
             session._guildCache[lazyGuild.id] = lazyGuild;
           });
         }
@@ -56,7 +56,7 @@ class DiscordDispatcher {
           await Future.forEach(data['private_channels'],
               (privateChannelJson) async {
             var privateChannel = new DiscordDMChannel(session);
-            await privateChannel._update(privateChannelJson);
+            privateChannel._update(privateChannelJson);
             session._privateChannelCache[privateChannel.id] = privateChannel;
           });
         }
@@ -66,17 +66,17 @@ class DiscordDispatcher {
         var guildId = data['id'];
         if (session._guildCache[guildId] != null) {
           // Lazy loading guild from READY or a guild becomes available again to client
-          await (session._guildCache[guildId])._update(data);
+          (session._guildCache[guildId])._update(data);
         } else {
           var guild = new DiscordGuild(session);
-          await guild._update(data);
+          guild._update(data);
           session._guildCache[guildId] = guild;
           _onGuildJoinController.add(guild);
         }
       },
       'GUILD_UPDATE': (data) async {
         var guild = session._guildCache[data['id']];
-        await guild._update(data);
+        guild._update(data);
         session._guildCache[guild.id] = guild;
         _onGuildUpdateController.add(guild);
       },
@@ -88,13 +88,13 @@ class DiscordDispatcher {
           session._guildCache.remove(data['id']);
         } else {
           // Guild has gone offline
-          await guild._update(data);
+          guild._update(data);
           session._guildCache[guild.id] = guild;
         }
       },
       'CHANNEL_CREATE': (data) async {
         var channel = DiscordChannel.fromJson(data, session);
-        await channel._update(data);
+        channel._update(data);
 
         if (channel.type == ChannelType.GuildCategory ||
             channel.type == ChannelType.GuildText ||
@@ -110,7 +110,7 @@ class DiscordDispatcher {
       },
       'CHANNEL_UPDATE': (data) async {
         var channel = session.getChannel(data['id']);
-        await channel._update(data);
+        channel._update(data);
       },
       'CHANNEL_DELETE': (data) async {
         var guild = session.getGuild(session._channelGuildMap[data['id']]);
@@ -119,7 +119,7 @@ class DiscordDispatcher {
       'MESSAGE_CREATE': (data) async {
         var message = new DiscordMessage(session);
 
-        await message._update(data);
+        message._update(data);
 
         _onMessageCreateController.add(message);
       }

@@ -14,10 +14,10 @@ class DiscordGuildVoiceChannel extends DiscordGuildChannel {
   int userLimit;
 
   @override
-  Future _update(Map<String, dynamic> model) async {
+  _update(Map<String, dynamic> model) {
     bitrate = model['bitrate'] ?? bitrate;
     userLimit = model['user_limit'] ?? userLimit;
 
-    await super._update(model);
+    super._update(model);
   }
 }

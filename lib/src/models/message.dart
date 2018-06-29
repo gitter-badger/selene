@@ -78,8 +78,8 @@ class DiscordMessage extends DiscordEntity {
   bool get notCreatedByWebhook => !createdByWebhook;
 
   @override
-  Future _update(Map<String, dynamic> model) async {
-    await super._update(model);
+  _update(Map<String, dynamic> model) {
+    super._update(model);
 
     channelId = model['channel_id'] ?? channelId;
     content = model['content'] ?? content;
@@ -88,8 +88,8 @@ class DiscordMessage extends DiscordEntity {
       if (model['webhook_id'] == null) {
         // Not a webhook
         author = new DiscordUser(session);
-        await author._update(model['author']);
-      }
+        author._update(model['author']);
+      } else {}
     }
 
     if (model['timestamp'] != null) {

@@ -14,8 +14,8 @@ class PermissionOverwrite extends DiscordEntity {
   int denied;
 
   @override
-  Future _update(Map<String, dynamic> model) async {
-    await super._update(model);
+  _update(Map<String, dynamic> model) {
+    super._update(model);
     switch (model['type']) {
       case 'role':
         type = OverwriteType.Role;
