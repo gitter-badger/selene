@@ -80,7 +80,8 @@ class DiscordGuild extends DiscordEntity {
   /// A list of roles in this guild.
   List<DiscordGuildRole> roles = [];
 
-  // TODO: Emoji objects
+  /// A list of all custom emojis in this guild.
+  List<DiscordEmoji> emojis = [];
 
   /// A list of features enabled for this guild.
   List<String> featuresEnabled = [];
@@ -159,6 +160,7 @@ class DiscordGuild extends DiscordEntity {
         defaultMessageNotificationsLevel = null;
         explicitContentFilterLevel = null;
         roles = [];
+        emojis = [];
         channels = {};
         featuresEnabled = [];
         mfaLevel = null;
@@ -193,6 +195,13 @@ class DiscordGuild extends DiscordEntity {
       var role = new DiscordGuildRole(session);
       role._update(jsonRole);
       roles.add(role);
+    }
+
+    for (var jsonEmoji in model['emojis'] ?? []) {
+      var emoji = new DiscordEmoji(session);
+      emoji._update(jsonEmoji);
+      emojis.add(emoji);
+      session._emojiCache[emoji.id] = emoji;
     }
 
     for (var jsonChannel in model['channels'] ?? []) {

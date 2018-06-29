@@ -8,4 +8,7 @@ abstract class DiscordTextChannel {
 
   /// The type of this channel.
   ChannelType type;
+
+  /// A message cache.
+  Map<String, DiscordMessage> messages = <String, DiscordMessage>{};
 }

@@ -120,8 +120,30 @@ class DiscordDispatcher {
         var message = new DiscordMessage(session);
 
         message._update(data);
+        message.channel.messages[message.id] = message;
 
         _onMessageCreateController.add(message);
+      },
+      'MESSAGE_UPDATE': (data) async {
+        var channel =
+            session.getChannel(data['channel_id']) as DiscordTextChannel;
+        if (channel.messages.containsKey(data['id'])) {
+          channel.messages[data['id']]._update(data);
+        }
+      },
+      'MESSAGE_DELETE_BULK': (data) async {
+        var channel =
+            session.getChannel(data['channel_id']) as DiscordTextChannel;
+        for (var jsonMessageId in data['ids'] ?? []) {
+          channel.messages.remove(jsonMessageId);
+        }
+      },
+      'MESSAGE_REACTION_ADD': (data) async {
+        var channel =
+            session.getChannel(data['channel_id']) as DiscordTextChannel;
+        var message = channel.messages[data['message_id']];
+        var reaction = new DiscordReaction(session);
+        reaction._update(data);
       }
     };
   }

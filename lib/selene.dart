@@ -33,6 +33,7 @@ part 'src/models/message.dart';
 part 'src/models/permission_overwrite.dart';
 part 'src/models/guild_role.dart';
 part 'src/models/emote.dart';
+part 'src/models/reaction.dart';
 
 // Models - Guilds
 part 'src/models/guilds/guild.dart';

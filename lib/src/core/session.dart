@@ -29,6 +29,9 @@ class DiscordSession {
   /// The entity cache for private messages.
   Map<String, DiscordDMChannel> _privateChannelCache = {};
 
+  /// The entity cache for Discord emojis.
+  Map<String, DiscordEmoji> _emojiCache = {};
+
   /// Creates a Discord session.
   DiscordSession(
     String token,

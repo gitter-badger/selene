@@ -47,7 +47,8 @@ class DiscordMessage extends DiscordEntity {
   /// Whether this message does not mention @everyone.
   bool get doesNotMentionEveryone => !mentionsEveryone;
 
-  // TODO: Mention users
+  /// A list of all users mentioned in this message.
+  List<DiscordUser> mentions = [];
 
   // TODO: Roles mentioned
 
@@ -55,7 +56,8 @@ class DiscordMessage extends DiscordEntity {
 
   // TODO: Embeds
 
-  // TODO: Reactions
+  /// Reactions that have been applied to this message.
+  List<DiscordReaction> reactions = [];
 
   // TODO: Nonce?
 
@@ -105,6 +107,19 @@ class DiscordMessage extends DiscordEntity {
 
     isTTS = model['tts'] ?? isTTS;
     mentionsEveryone = model['mention_everyone'] ?? mentionsEveryone;
+
+    for (var jsonMentionee in model['mentions'] ?? []) {
+      var mentionee = new DiscordUser(session);
+      mentionee._update(jsonMentionee);
+      mentions.add(mentionee);
+    }
+
+    for (var jsonReaction in model['reactions'] ?? []) {
+      var reaction = new DiscordReaction(session);
+      reaction._update(jsonReaction);
+      reactions.add(reaction);
+    }
+
     isPinned = model['pinned'] ?? isPinned;
     webhookId = model['webhook_id'] ?? webhookId;
     switch (model['type']) {
