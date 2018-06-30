@@ -56,7 +56,7 @@ class RequestBucket {
     } else {
       if (remaining <= 0) {
         // I don't know how remaining could somehow be lower, but I'm keeping it here for safety.
-        throw new RatelimitedException(this, method);
+        throw new RatelimitedException(this, method, resetTime);
       }
       response = await request.send(method);
     }
